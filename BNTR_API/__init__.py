@@ -1,5 +1,5 @@
 """BNTR_API Package Initializer."""
-import Flask
+import flask
 
 app = flask.Flask(__name__)
 
