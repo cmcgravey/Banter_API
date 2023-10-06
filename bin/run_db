@@ -20,8 +20,6 @@ case $1 in
   "create")
     mkdir -p var/uploads
     sqlite3 var/BNTR_API.sqlite3 < sql/schema.sql
-    sqlite3 var/BNTR_API.sqlite3 < sql/data.sql
-    cp sql/uploads/* var/uploads/
     ;;
 
 
@@ -34,8 +32,6 @@ case $1 in
     rm -rf var/BNTR_API.sqlite3 var/uploads
     mkdir -p var/uploads
     sqlite3 var/BNTR_API.sqlite3 < sql/schema.sql
-    sqlite3 var/BNTR_API.sqlite3 < sql/data.sql
-    cp sql/uploads/* var/uploads/
     ;;
 
 

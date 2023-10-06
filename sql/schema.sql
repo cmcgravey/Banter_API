@@ -1,42 +1,45 @@
 PRAGMA foreign_keys = ON; 
 
 CREATE TABLE Users(
-    userID INTEGER NOT NULL,
+    userID INTEGER PRIMARY KEY AUTOINCREMENT,
     username VARCHAR(25) NOT NULL,
     password VARCHAR(50) NOT NULL,
-    banter INTEGER NOT NULL,
-    PRIMARY KEY(userID)
+    banter INTEGER NOT NULL
 );
 
 CREATE TABLE Teams(
-    teamID INTEGER NOT NULL,
+    teamID INTEGER PRIMARY KEY AUTOINCREMENT,
     logo VARCHAR(100) NOT NULL,
     name VARCHAR(50) NOT NULL,
-    PRIMARY KEY(teamID)
+    abbr VARCHAR(10) NOT NULL
 );
 
 CREATE TABLE Games(
-    gameID INTEGER NOT NULL,
+    gameID INTEGER PRIMARY KEY AUTOINCREMENT,
     teamID1 INTEGER NOT NULL,
     teamID2 INTEGER NOT NULL,
     status VARCHAR(15) NOT NULL,
     num_questions INTEGER NOT NULL,
-    PRIMARY KEY(gameID),
     FOREIGN KEY(teamID1) REFERENCES Teams(teamID), 
     FOREIGN KEY(teamID2) REFERENCES Teams(teamID)
 );
 
 CREATE TABLE Questions(
-    questionID INTEGER NOT NULL,
+    questionID INTEGER PRIMARY KEY AUTOINCREMENT,
     gameID INTEGER NOT NULL,
     worth INTEGER NOT NULL,
-    PRIMARY KEY(questionID),
+    text VARCHAR(100) NOT NULL,
+    opt1 VARCHAR(50) NOT NULL,
+    opt2 VARCHAR(50) NOT NULL,
+    opt3 VARCHAR(50) NOT NULL,
+    answer VARCHAR(50) NOT NULL,
     FOREIGN KEY(gameID) REFERENCES Games(gameID)
 );
 
 CREATE TABLE Answers(
     userID INTEGER NOT NULL,
     questionID INTEGER NOT NULL,
+    answer VARCHAR(50) NOT NULL,
     status VARCHAR(20) NOT NULL,
     FOREIGN KEY(userID) REFERENCES Users(userID),
     FOREIGN KEY(questionID) REFERENCES Questions(questionID),

@@ -1,0 +1,16 @@
+#!/bin/bash
+# insta485db
+
+
+# Stop on errors
+# See https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
+set -Eeuo pipefail
+set -e
+
+# test if file exists, if not exit with status: 2 and print error messages
+
+[ ! -f var/BNTR_API.sqlite3 ] && echo "Error: var/BNTR_API.sqlite3 does not exist." && echo "Try: ./bin/run_db create" && exit 2
+
+set -x
+
+flask --app BNTR_API --debug run --host 0.0.0.0 --port 8000
