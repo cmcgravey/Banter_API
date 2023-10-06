@@ -15,4 +15,4 @@ def show_routes():
 
     print('here')
     
-    return flask.jsonify(**context)
+    return flask.jsonify(**context), 200
