@@ -1,6 +1,5 @@
 blinker==1.6.2
-# Editable Git install with no remote (BNTR-API==1.0.0)
--e /Users/colinmcgravey/Documents/Banter_API_DB
+-e git+https://github.com/cmcgravey/Banter_API.git@661a7be1c5b9a68cffbb50d0293d3795dab73887#egg=BNTR_API
 certifi==2023.7.22
 charset-normalizer==3.3.0
 click==8.1.7

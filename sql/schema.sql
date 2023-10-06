@@ -31,7 +31,7 @@ CREATE TABLE Questions(
     text VARCHAR(100) NOT NULL,
     opt1 VARCHAR(50) NOT NULL,
     opt2 VARCHAR(50) NOT NULL,
-    opt3 VARCHAR(50) NOT NULL,
+    opt3 VARCHAR(50),
     answer VARCHAR(50) NOT NULL,
     FOREIGN KEY(gameID) REFERENCES Games(gameID)
 );
