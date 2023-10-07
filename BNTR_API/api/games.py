@@ -50,29 +50,16 @@ def update_game(game_id_slug):
         return flask.jsonify(**context), 403
     
     connection = BNTR_API.model.get_db()
-    type = msg['type']
-
-    if type == 'questions':
-        new_num = msg['update']
-        cur = connection.execute(
-            "UPDATE games "
-            "SET num_questions = ? "
-            "WHERE gameID =  ? "
-            "RETURNING * ",
-            (new_num, game_id_slug, )
-        )
-        game_update = cur.fetchall()
-
-    else:
-        new_status = msg['update']
-        cur = connection.execute(
-            "UPDATE games "
-            "SET status = ? "
-            "WHERE gameID = ? "
-            "RETURNING * ",
-            (new_status, game_id_slug, )
-        )
-        game_update = cur.fetchall()
+    
+    new_status = msg['update']
+    cur = connection.execute(
+        "UPDATE games "
+        "SET status = ? "
+        "WHERE gameID = ? "
+        "RETURNING * ",
+        (new_status, game_id_slug, )
+    )
+    game_update = cur.fetchall()
     
     context = {
         "gameID": game_update[0]['gameID'],
@@ -113,4 +100,39 @@ def retrieve_game(game_id_slug):
         "num_questions": game_info[0]['num_questions']
     }
 
+    return flask.jsonify(**context), 200
+
+
+@BNTR_API.app.route('/api/games/')
+def fetch_games():
+    """Fetch all games of a certain status."""
+    msg = flask.request.json
+
+    if not (verify_key(msg['api_key'])):
+        context = {'msg': 'invalid key'}
+        return flask.jsonify(**context), 403
+    
+    connection = BNTR_API.model.get_db()
+    status = msg['status']
+
+    cur = connection.execute(
+        "SELECT * "
+        "FROM games "
+        "WHERE status = ? ",
+        (status, )
+    )
+    games = cur.fetchall()
+
+    context = {"games": []}
+
+    for i, game in games:
+        dict_entry = {
+            "gameID": game[i]['gameID'],
+            "teamID1": game[i]['teamID1'],
+            "teamID2": game[i]['teamID2'],
+            "status": game[i]['status'],
+            "num_questions": game[i]['num_questions'],
+        }
+        context['games'].append(dict_entry)
+    
     return flask.jsonify(**context), 200

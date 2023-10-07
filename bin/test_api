@@ -1,0 +1,71 @@
+#!/bin/bash
+# BNTR_API
+
+
+# Stop on errors
+# See https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
+set -Eeuo pipefail
+set -x
+
+# Reset database for running tests 
+./bin/run_db reset
+
+
+curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", }' http://localhost:8000/api/
+
+# Display routes 
+curl -X GET http://localhost:8000/api/routes/
+
+# Insert users into the database 
+curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "username": "cmcgravey", "password": "password"}' http://localhost:8000/api/users/
+curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "username": "samimud", "password": "fartsniffer"}' http://localhost:8000/api/users/
+curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "username": "ianglee", "password": "snifferfart"}' http://localhost:8000/api/users/
+
+# Update existing user's password 
+curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "type": "password", "new_password": "buttfart"}' http://localhost:8000/api/users/2/
+
+# Update all users' banter to 50
+curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "type": "banter", "new_banter": 50}' http://localhost:8000/api/users/1/
+curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "type": "banter", "new_banter": 50}' http://localhost:8000/api/users/2/
+curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "type": "banter", "new_banter": 50}' http://localhost:8000/api/users/3/
+
+# Verify user's login information
+curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "username": "samimud", "password": "buttfart"}' http://localhost:8000/api/users/logon/
+
+# Fetch user's information
+curl -X GET -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b"}' http://localhost:8000/api/users/2/
+
+# Insert two teams into the database
+curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "name": "Chelsea", "abbr": "CHE", "logo": "chelsea.png"}' http://localhost:8000/api/teams/
+curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "name": "Manchester United", "abbr": "UTD", "logo": "man_utd.png"}' http://localhost:8000/api/teams/
+
+# Fetch team information
+curl -X GET -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b"}' http://localhost:8000/api/teams/1/
+
+# Insert game into the database 
+curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "teamID1": "1", "teamID2": "2"}' http://localhost:8000/api/games/
+
+# Fetch all games with PENDING status
+curl -X GET -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "status": "PENDING"}' http://localhost:8000/api/games/
+
+# Fetch game by gameID 
+
+
+# Update game status to IN PLAY
+
+
+# Insert questions for gameID 1 
+
+
+# Fetch questions for gameID 1 
+
+
+# Insert answers for questions 
+
+
+# Update answers 
+
+
+# View user's scores updates 
+
+
