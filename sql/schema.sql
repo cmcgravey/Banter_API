@@ -4,7 +4,8 @@ CREATE TABLE Users(
     userID INTEGER PRIMARY KEY AUTOINCREMENT,
     username VARCHAR(25) NOT NULL,
     password VARCHAR(50) NOT NULL,
-    banter INTEGER NOT NULL
+    banter INTEGER NOT NULL,
+    UNIQUE(username)
 );
 
 CREATE TABLE Teams(
