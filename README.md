@@ -1,8 +1,8 @@
-## Banter API Documentation
+# Banter API Documentation
 
 By: Colin McGravey
 
-#### Section 1: Scripts 
+## Section 1: Scripts 
 
 ###### bin/run_db (create | destroy | reset | dump)
 
@@ -17,7 +17,7 @@ This script takes no keyword arguments, and simply runs the flask application on
 This script also takes no keyword arguments and runs through a mock use case of the API, inserting users, questions, answers, and updating user scores. 
 
 
-#### Section 2: Basic Request Syntax 
+## Section 2: Basic Request Syntax 
 All requests should be made with a JSON body. Inside the JSON, for every request made, include the private API key in a field titled "api_key". Each request will demand for different fields to be included and will be explained later in this document. The only route that can be accessed with no API key is http://localhost:8000/api/routes/, which displays the possible API endpoints. 
 
 This documentation is written assuming the API is running on your local machine, however, if it is in some deployed environment, the request URLs should be changed accordingly. 
@@ -33,7 +33,7 @@ This documentation is written assuming the API is running on your local machine,
 }
 ```
 
-#### Section 3: Routes Endpoint
+## Section 3: Routes Endpoint
 
 ###### http://localhost:8000/api/routes/
 
@@ -71,7 +71,7 @@ Request body is unneccessary for this route as it does not require an API key, n
 
 **The remainder of the documentation will touch on each of the other five endpoints.** 
 
-#### Section 4: Users Routes
+## Section 4: Users Routes
 
 ###### **POST /api/users/**
 
@@ -173,7 +173,7 @@ Route fetches the information for one user by userID.
 }
 ```
 
-#### Section 5: Teams Routes
+## Section 5: Teams Routes
 
 ###### **POST /api/teams/**
 
@@ -216,7 +216,7 @@ Fetches team from the database according to teamID.
 }
 ```
 
-#### Section 6: Games Routes
+## Section 6: Games Routes
 
 ###### **POST /api/games/**
 
@@ -317,7 +317,7 @@ Fetches all games of a particular status, i.e. 'PENDING', 'IN PLAY', 'COMPLETED'
 }
 ```
 
-#### Section 7: Questions Routes
+## Section 7: Questions Routes
 
 ###### **POST /api/questions/<game_id_slug>/**
 
@@ -407,7 +407,7 @@ Fetches all the questions pertaining to a specific gameID.
 
 Questions are fetched whether they have been completed or not. 
 
-#### Section 8: Answers Routes
+## Section 8: Answers Routes
 
 ###### **POST /api/answers/<question_id_slug>/<user_id_slug>/**
 
