@@ -1,5 +1,5 @@
 blinker==1.6.2
--e git+https://github.com/cmcgravey/Banter_API.git@661a7be1c5b9a68cffbb50d0293d3795dab73887#egg=BNTR_API
+-e git+https://github.com/cmcgravey/Banter_API.git@e0dbd5b4a5c79341c6e981d6bb59ac4fb7d439fe#egg=BNTR_API
 certifi==2023.7.22
 charset-normalizer==3.3.0
 click==8.1.7
