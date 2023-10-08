@@ -26,7 +26,7 @@ def insert_question(game_id_slug):
 
     connection.execute(
         "INSERT INTO questions(gameID, worth, decrease, text, opt1, opt2, opt3, answer, time_designation) "
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?) ",
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ",
         (game_id_slug, worth, decrease, text, opt1, opt2, opt3, answer, time_dsg, )
     )
 
@@ -48,7 +48,7 @@ def insert_question(game_id_slug):
         "opt1": opt1, 
         "opt2": opt2, 
         "opt3": opt3, 
-        "questionID": ques_id,
+        "questionID": ques_id['last_insert_rowid()'],
         "answer": answer
     }
 
@@ -110,16 +110,16 @@ def fetch_questions_for_game(game_id_slug):
 
     context = {"questions": []}
 
-    for i, ques in questions:
+    for ques in questions:
         dict_entry = {
-            "questionID": ques[i]['questionID'],
-            "gameID": ques[i]['gameID'],
-            "worth": ques[i]['worth'],
-            "decrease": ques[i]['decrease'],
-            "text": ques[i]['text'],
-            "options": [ques[i]['opt1'], ques[i]['opt2'], ques[i]['opt3']],
-            "answer": ques[i]['answer'],
-            "time_designation": ques[i]['time_designation']
+            "questionID": ques['questionID'],
+            "gameID": ques['gameID'],
+            "worth": ques['worth'],
+            "decrease": ques['decrease'],
+            "text": ques['text'],
+            "options": [ques['opt1'], ques['opt2'], ques['opt3']],
+            "answer": ques['answer'],
+            "time_designation": ques['time_designation']
         }
         context['questions'].append(dict_entry)
     
@@ -166,9 +166,9 @@ def update_answers_and_scores(question_id_slug, msg):
 
     for user in incorrect_users:
         connection.execute(
-            "UPDATE answers "
+            "UPDATE users "
             "SET banter = banter - ? "
-            "WHERE userID + ? ",
+            "WHERE userID = ? ",
             (incorrect_worth, user['userID'], )
         )
     
@@ -179,4 +179,4 @@ def update_answers_and_scores(question_id_slug, msg):
         "decrease": incorrect_worth
     }
 
-    return flask.jsonify(**context), 200
+    return context

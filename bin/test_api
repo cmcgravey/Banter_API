@@ -7,9 +7,6 @@
 set -Eeuo pipefail
 set -x
 
-# Reset database for running tests 
-./bin/run_db reset
-
 # Display routes 
 curl -X GET http://localhost:8000/api/routes/
 
@@ -63,7 +60,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d29
 curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "answer": "over"}' http://localhost:8000/api/answers/1/3/
 
 # Update answers 
-curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", }' http://localhost:8000/api/questions/update/1/
+curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "answer": "over"}' http://localhost:8000/api/questions/update/1/
 
 # View user's scores updates 
 curl -X GET -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b"}' http://localhost:8000/api/users/1/

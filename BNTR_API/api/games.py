@@ -14,8 +14,8 @@ def insert_game():
     
     connection = BNTR_API.model.get_db()
 
-    teamid1 = msg['teamid1']
-    teamid2 = msg['teamid2']
+    teamid1 = msg['teamID1']
+    teamid2 = msg['teamID2']
     status = 'PENDING'
     num_questions = 0
 
@@ -50,7 +50,7 @@ def update_game(game_id_slug):
         return flask.jsonify(**context), 403
     
     connection = BNTR_API.model.get_db()
-    
+
     new_status = msg['update']
     cur = connection.execute(
         "UPDATE games "
@@ -125,13 +125,13 @@ def fetch_games():
 
     context = {"games": []}
 
-    for i, game in games:
+    for game in games:
         dict_entry = {
-            "gameID": game[i]['gameID'],
-            "teamID1": game[i]['teamID1'],
-            "teamID2": game[i]['teamID2'],
-            "status": game[i]['status'],
-            "num_questions": game[i]['num_questions'],
+            "gameID": game['gameID'],
+            "teamID1": game['teamID1'],
+            "teamID2": game['teamID2'],
+            "status": game['status'],
+            "num_questions": game['num_questions'],
         }
         context['games'].append(dict_entry)
     
