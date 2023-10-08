@@ -34,14 +34,9 @@ def insert_answer(question_id_slug, user_id_slug):
     return flask.jsonify(**context), 200
 
 
-@BNTR_API.app.route('/api/answers/<question_id_slug>/')
 def update_answers_and_scores(question_id_slug):
     """Update answer status and user scores."""
     msg = flask.request.json
-
-    if not (verify_key(msg['api_key'])):
-        context = {'msg': 'invalid key'}
-        return flask.jsonify(**context), 403
 
     connection = BNTR_API.model.get_db()
     correct_status = 'CORRECT'
@@ -82,7 +77,7 @@ def update_answers_and_scores(question_id_slug):
     for user in incorrect_users:
         connection.execute(
             "UPDATE answers "
-            "SET score = score - ? "
+            "SET banter = banter - ? "
             "WHERE userID + ? ",
             (incorrect_worth, user['userID'], )
         )

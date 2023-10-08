@@ -10,9 +10,6 @@ set -x
 # Reset database for running tests 
 ./bin/run_db reset
 
-
-curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", }' http://localhost:8000/api/
-
 # Display routes 
 curl -X GET http://localhost:8000/api/routes/
 
@@ -49,23 +46,27 @@ curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d29
 curl -X GET -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "status": "PENDING"}' http://localhost:8000/api/games/
 
 # Fetch game by gameID 
-
+curl -X GET -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b"}' http://localhost:8000/api/games/1/
 
 # Update game status to IN PLAY
-
+curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "update": "IN PLAY"}' http://localhost:8000/api/games/1/
 
 # Insert questions for gameID 1 
-
+curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "weight": 32, "decrease": 4, "question": "Over or Under 3.5 goals?", "opt1": "over", "opt2": "under", "opt3": "NULL", "time_designation": "PREGAME"}' http://localhost:8000/api/questions/1/
 
 # Fetch questions for gameID 1 
-
+curl -X GET -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b"}' http://localhost:8000/api/questions/1/
 
 # Insert answers for questions 
-
+curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "answer": "over"}' http://localhost:8000/api/answers/1/1/
+curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "answer": "under"}' http://localhost:8000/api/answers/1/2/
+curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "answer": "over"}' http://localhost:8000/api/answers/1/3/
 
 # Update answers 
-
+curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", }' http://localhost:8000/api/questions/update/1/
 
 # View user's scores updates 
-
+curl -X GET -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b"}' http://localhost:8000/api/users/1/
+curl -X GET -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b"}' http://localhost:8000/api/users/2/
+curl -X GET -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b"}' http://localhost:8000/api/users/3/
 
