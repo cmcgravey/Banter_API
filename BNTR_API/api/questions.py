@@ -15,19 +15,25 @@ def insert_question(game_id_slug):
     
     connection = BNTR_API.model.get_db()
 
-    worth = msg['weight']
-    decrease = msg['decrease']
+    question_stage = msg['question_stage']
+    label = msg['label']
     text = msg['question']
-    opt1 = msg['opt1']
-    opt2 = msg['opt2']
-    opt3 = msg['opt3']
-    time_dsg = msg['time_designation']
+
+    opt1, worth1, decrease1 = msg['opt1']
+    opt2, worth2, decrease2 = msg['opt2']
+    opt3 = 'NULL'
+    worth3 = 0
+    decrease3 = 0
+
+    if 'opt3' in msg:
+        opt3, worth3, decrease3 = msg['opt3']
+
     answer = 'PENDING'
 
     connection.execute(
-        "INSERT INTO questions(gameID, worth, decrease, text, opt1, opt2, opt3, answer, time_designation) "
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ",
-        (game_id_slug, worth, decrease, text, opt1, opt2, opt3, answer, time_dsg, )
+        "INSERT INTO questions(gameID, text, label, question_stage, opt1, worth1, decrease1, opt2, worth2, decrease2, opt3, worth3, decrease3, answer) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
+        (game_id_slug, text, label, question_stage, opt1, worth1, decrease1, opt2, worth2, decrease2, opt3, worth3, decrease3, answer, )
     )
 
     cur = connection.execute(
@@ -45,11 +51,11 @@ def insert_question(game_id_slug):
 
     context = {
         "text": text, 
-        "opt1": opt1, 
-        "opt2": opt2, 
-        "opt3": opt3, 
+        "opts": [opt1, opt2, opt3], 
         "questionID": ques_id['last_insert_rowid()'],
-        "answer": answer
+        "answer": answer,
+        "label": label,
+        "stage": question_stage
     }
 
     return flask.jsonify(**context), 200
@@ -78,10 +84,12 @@ def update_question_answer(question_id_slug):
 
     question = cur.fetchone()
 
+    worth, decrease = get_values(answer, question)
+
     request_dict = {
         "answer": answer,
-        "worth": question['worth'],
-        "decrease": question['decrease']
+        "worth": worth,
+        "decrease": decrease
     }
 
     context = update_answers_and_scores(question_id_slug, request_dict)
@@ -114,12 +122,13 @@ def fetch_questions_for_game(game_id_slug):
         dict_entry = {
             "questionID": ques['questionID'],
             "gameID": ques['gameID'],
-            "worth": ques['worth'],
-            "decrease": ques['decrease'],
+            "label": ques['label'],
+            "stage": ques['question_stage'],
             "text": ques['text'],
             "options": [ques['opt1'], ques['opt2'], ques['opt3']],
-            "answer": ques['answer'],
-            "time_designation": ques['time_designation']
+            "increases": [ques['worth1'], ques['worth2'], ques['worth3']],
+            "decreases": [ques['decrease1'], ques['decrease2'], ques['decrease3']],
+            "answer": ques['answer']
         }
         context['questions'].append(dict_entry)
     
@@ -180,3 +189,17 @@ def update_answers_and_scores(question_id_slug, msg):
     }
 
     return context
+
+def get_values(answer, question):
+    """Get increase and decrease values for respective answer."""
+    if answer == 'opt1':
+        worth = question['worth1']
+        decrease = question['decrease1']
+    elif answer == 'opt2':
+        worth = question['worth2']
+        decrease = question['decrease2']
+    else:
+        worth = question['worth3']
+        decrease = question['decrease3']
+
+    return worth, decrease

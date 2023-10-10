@@ -28,14 +28,19 @@ CREATE TABLE Games(
 CREATE TABLE Questions(
     questionID INTEGER PRIMARY KEY AUTOINCREMENT,
     gameID INTEGER NOT NULL,
-    worth INTEGER NOT NULL,
-    decrease INTEGER NOT NULL,
     text VARCHAR(100) NOT NULL,
+    label VARCHAR(100) NOT NULL,
+    question_stage VARCHAR(100) NOT NULL,
     opt1 VARCHAR(50) NOT NULL,
+    worth1 INTEGER NOT NULL,
+    decrease1 INTEGER NOT NULL,
     opt2 VARCHAR(50) NOT NULL,
+    worth2 INTEGER NOT NULL,
+    decrease2 INTEGER NOT NULL,
     opt3 VARCHAR(50) NOT NULL,
+    worth3 INTEGER NOT NULL,
+    decrease3 INTEGER NOT NULL,
     answer VARCHAR(50) NOT NULL,
-    time_designation VARCHAR(20) NOT NULL,
     FOREIGN KEY(gameID) REFERENCES Games(gameID)
 );
 
