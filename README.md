@@ -326,30 +326,41 @@ Inserts a question into the database for the specified gameID.
 *Input* 
 ```
 {
-    "api_key": "xxxxxxxxx",
-    "worth": 35, (score increase from question)
-    "decrease": 5, (score decrease)
-    "text": "Over or Under 3.5 goals?",
-    "opt1": "over",
-    "opt2": "under",
-    "opt3": "NULL", 
-    "time_designation": "PREGAME"
+    "question_stage": "Pregame",
+    "label": "h2h",
+    "question": "Who is going to win?",
+    "Game_id": 12,
+    "opt1": [
+        "Everton",
+        15,
+        6
+    ],
+    "opt2": [
+        "Liverpool",
+        36,
+        14
+    ],
+    "opt3": [
+        "Draw",
+        17,
+        6
+    ]
 }
 ```
 
 *Output* 
 ```
 {
-    "text": "Over or Under 3.5 goals?",
-    "opt1": "over",
-    "opt2": "under",
-    "opt3": "NULL", 
+    "text": "Who is going to win?", 
+    "opts": ["Everton", "Liverpool", "Draw"], 
     "questionID": 1,
-    "answer": "PENDING"
+    "answer": "PENDING",
+    "label": "h2h",
+    "stage": "Pregame"
 }
 ```
 
-This route requires a significant amount of information from the backend. When the route is called, each question is inserted into the database with an answer of 'PENDING'. Once the question is updated, this field will contain the actual answer, and can be used to determine the accuracy of user answers. 
+This route requires a significant amount of information from the backend. When the route is called, each question is inserted into the database with an answer of 'PENDING'. Once the question is updated, this field will contain the option for the answer, and can be used to determine the accuracy of user answers. 
 
 ###### **POST /api/questions/update/<question_id_slug>/**
 
@@ -359,7 +370,7 @@ Updates the answer field of a question in the database.
 ```
 {
     "api_key": "xxxxxxxxxx",
-    "answer": "over"
+    "answer": "opt1"
 }
 ```
 *Output* 
@@ -367,12 +378,12 @@ Updates the answer field of a question in the database.
 {
     "num_correct": 2, (number of correct users)
     "num_incorrect": 5, (number of incorrect users)
-    "increase": 35, (score increase)
-    "decrease": 5 (score decrease)
+    "increase": 15, (score increase)
+    "decrease": 6 (score decrease)
 }
 ```
 
-After this route is called, each user's answer for the particular question is cross checked with the newly inserted correct answer. If the user is correct, their score is updated with the 'worth' parameter, if not, their score is decreased by the 'decrease' parameter. 
+After this route is called, each user's answer for the particular question is cross checked with the newly inserted correct answer. If the user is correct, their score is updated with the 'worth' parameter, if not, their score is decreased by the 'decrease' parameter. IMPORTANT: When the answer is inserted it must be one of the three strings ['OPT1', 'OPT2', 'OPT3'], else there will be serious errors. 
 
 ###### **GET /api/questions/<game_id_slug>/**
 
@@ -391,14 +402,24 @@ Fetches all the questions pertaining to a specific gameID.
         {
             "questionID": 1,
             "gameID": 1,
-            "worth": 35,
-            "decrease": 5,
-            "text": "Over or Under 3.5 goals?",
+            "text": "Who is going to win?",
+            "label": "h2h",
+            "stage": "Pregame",
             "options": [
-                "over",
-                "under",
-                "NULL"
-            ]
+                "Everton",
+                "Liverpool",
+                "Draw"
+            ],
+            "increases": [
+                15,
+                36, 
+                17
+            ],
+            "decreases": [
+                6, 
+                14, 
+                6
+            ],
             "answer": "over"
         }
     ]
@@ -430,4 +451,4 @@ Inserts an answer to a particular question, for a particular user.
 }
 ```
 
-All answers are inserted with a 'PENDING' status. The status is updated upon insertion of the answer to a particular question. Statuses are updated alongside user scores. 
+All answers are inserted with a 'PENDING' status. The status is updated upon insertion of the answer to a particular question. Statuses are updated alongside user scores. The actual answer should always be inserted as one of ['OPT1', 'OPT2', 'OPT3']. The answer should not be answered as the literal text for the option, this will cause serious issues. 
