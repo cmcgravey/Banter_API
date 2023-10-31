@@ -16,13 +16,16 @@ def insert_game():
 
     teamid1 = msg['teamID1']
     teamid2 = msg['teamID2']
+    team1_score = 0
+    team2_score = 0
+    time_elapsed = '00:00'
     status = 'PENDING'
     num_questions = 0
 
     connection.execute(
-        "INSERT INTO games(teamID1, teamID2, status, num_questions) "
-        "VALUES (?, ?, ?, ?) ",
-        (teamid1, teamid2, status, num_questions, )
+        "INSERT INTO games(teamID1, teamID2, team1_score, team2_score, time_elapsed, status, num_questions) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?) ",
+        (teamid1, teamid2, team1_score, team2_score, time_elapsed, status, num_questions, )
     )
 
     cur = connection.execute(
@@ -54,17 +57,31 @@ def update_game(game_id_slug):
     new_status = msg['update']
     cur = connection.execute(
         "UPDATE games "
-        "SET status = ? "
+        "SET team1_score = ?, team2_score = ?, time_elapsed = ? "
         "WHERE gameID = ? "
         "RETURNING * ",
-        (new_status, game_id_slug, )
+        (new_status[0], new_status[1], new_status[2], game_id_slug, )
     )
+    game_update = cur.fetchall()
+
+    if 'status' in msg:
+        cur = connection.execute(
+            "UPDATE games "
+            "SET status = ? "
+            "WHERE gameID = ? "
+            "RETURNING * ",
+            (msg['status'], game_id_slug, )
+        )
+    
     game_update = cur.fetchall()
     
     context = {
         "gameID": game_update[0]['gameID'],
         "team1": game_update[0]['teamID1'],
+        "team1_score": game_update[0]['team1_score'],
         "team2": game_update[0]['teamID2'],
+        "team2_score": game_update[0]['team2_score'],
+        "time_elapsed": game_update[0]['time_elapsed'],
         "status": game_update[0]['status'],
         "num_questions": game_update[0]['num_questions']
     }
@@ -95,7 +112,10 @@ def retrieve_game(game_id_slug):
     context = {
         "gameID": game_id_slug,
         "teamID1": game_info[0]['teamID1'],
+        "team1_score": game_info[0]['team1_score'],
         "teamID2": game_info[0]['teamID2'],
+        "team2_score": game_info[0]['team2_score'],
+        "time_elapsed": game_info[0]['time_elapsed'],
         "status": game_info[0]['status'],
         "num_questions": game_info[0]['num_questions']
     }
@@ -129,7 +149,10 @@ def fetch_games():
         dict_entry = {
             "gameID": game['gameID'],
             "teamID1": game['teamID1'],
+            "team1_score": game['team1_score'],
             "teamID2": game['teamID2'],
+            "team2_score": game['team2_score'],
+            "time_elapsed": game['time_elapsed'],
             "status": game['status'],
             "num_questions": game['num_questions'],
         }

@@ -154,3 +154,33 @@ def fetch_user(user_id_slug):
     }
 
     return flask.jsonify(**context), 200
+
+
+@BNTR_API.app.route('/api/users/leaders/')
+def fetch_leaderboards():
+    """Fetch leaderboard information."""
+    msg = flask.request.json
+
+    if not (verify_key(msg['api_key'])):
+        context = {'msg': 'invalid key'}
+        return flask.jsonify(**context), 403
+    
+    connection = BNTR_API.model.get_db()
+
+    cur = connection.execute(
+        "SELECT username, banter "
+        "FROM users "
+        "ORDER BY banter DESC ",
+        ()
+    )
+    leaders = cur.fetchall()
+
+    context = {"leaders": []}
+
+    for idx, user in enumerate(leaders):
+        if idx == 5:
+            break
+
+        context['leaders'].append({"name": user['username'], "banter": user['banter']})
+
+    return flask.jsonify(**context), 200

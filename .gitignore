@@ -3,3 +3,4 @@ env
 var
 *.egg-info
 *.pem
+.DS_Store
