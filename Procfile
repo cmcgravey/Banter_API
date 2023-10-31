@@ -1,1 +1,1 @@
-web: gunicorn BNTR_API:app
+web: python BNTR_API/__init__.py
