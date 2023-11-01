@@ -2,28 +2,39 @@
 
 By: Colin McGravey
 
-## Section 1: Scripts 
+### <em>Table of Contents</em>
+**[Section 1: Scripts](#scripts)**
+**[Section 2: Basic Request Syntax](#basic-request-syntax)**
+**[Section 3: Routes](#routes)**
+**[Section 4: Users](#users)**
+**[Section 5: Teams](#teams)**
+**[Section 6: Games](#games)**
+**[Section 7: Questions](#questions)**
+**[Section 8: Answers](#answers)**
 
-###### bin/run_db (create | destroy | reset | dump)
+
+## Scripts 
+
+#### 1. ./bin/run_db (create | destroy | reset | dump)
 
 The db script can be run from the command line and must be run with one keyword argument (create, destroy, reset, or dump). Running the script with 'dump' specified will dump all tables of the database into output. Create, destroy, reset, all deal with tearing down the database or initializing. 
 
-###### bin/run_api
+#### 2. ./bin/run_api
 
 This script takes no keyword arguments, and simply runs the flask application on your local machine on port 8000. 
 
-###### bin/test_api
+#### 3. ./bin/test_api (deployed | local)
 
-This script also takes no keyword arguments and runs through a mock use case of the API, inserting users, questions, answers, and updating user scores. 
-
-
-## Section 2: Basic Request Syntax 
-All requests should be made with a JSON body. Inside the JSON, for every request made, include the private API key in a field titled "api_key". Each request will demand for different fields to be included and will be explained later in this document. The only route that can be accessed with no API key is http://localhost:8000/api/routes/, which displays the possible API endpoints. 
-
-This documentation is written assuming the API is running on your local machine, however, if it is in some deployed environment, the request URLs should be changed accordingly. 
+This script takes one keyword argument, determining whether to test the API running on your local machine, or the API running on AWS. It then runs through a mock use case of the API, inserting users, questions, answers, and updating user scores.
 
 
-###### Example: JSON body for request
+## Basic Request Syntax 
+All routes can be accessed on your local machine at http://localhost:8000 or on the actual instance, running at http://ec2-34-238-139-153.compute-1.amazonaws.com.
+
+All <b>POST</b> requests should be made with a JSON body. Inside the JSON, for every request made, include the private API key in a field titled "api_key". Each request will demand for different fields to be included and will be explained later in this document. All <b>GET</b> requests take the API key as a URL keyword argument. The only route that can be accessed with no API key is /api/routes/, which displays the possible API endpoints. 
+
+
+###### Example: JSON body for POST request
 
 ```
 {
@@ -32,12 +43,16 @@ This documentation is written assuming the API is running on your local machine,
     "password": "password"
 }
 ```
+###### Example: URL for GET request
+```
+http://localhost:8000/api/users/1/?api_key=xxxxxxx
+```
 
-## Section 3: Routes Endpoint
+## Routes
 
-###### http://localhost:8000/api/routes/
+###### http://ec2-34-238-139-153.compute-1.amazonaws.com/api/routes
 
-Request body is unneccessary for this route as it does not require an API key, nor any extraneous information. Response will be in the form ...
+Request body is unneccessary for this route as it does not require an API key, nor any extraneous information. Response will be in the following form ...
 
 ```
 {
@@ -67,15 +82,13 @@ Request body is unneccessary for this route as it does not require an API key, n
         {"fetch_game_questions": "GET /api/questions/<game_id_slug>/"}
     ]
 }
-```
+``` 
 
-**The remainder of the documentation will touch on each of the other five endpoints.** 
+## **Users**
 
-## Section 4: Users Routes
+#### **GET /api/users/**
 
-###### **POST /api/users/**
-
-This route will insert a user into the database. 
+Inserts one user into the database. 
 
 *Input* 
 ```
@@ -95,17 +108,22 @@ This route will insert a user into the database.
 }
 ```
 
-###### **POST /api/users/<user_id_slug>/**
+#### **POST /api/users/<user_id_slug>/**
 
-Updates a user's password or score
+Updates a user's password or score.
 
 *Input* 
 ```
 {
     "api_key": "xxxxxxxx",
-    "type": "password" || "banter",
-    "new_banter": 45,
+    "type": "password",
     "new_password": "password"
+}
+OR 
+{
+    "api_key": "xxxxxxxx",
+    "type": "banter",
+    "new_banter": 50
 }
 ```
 *Output* 
@@ -117,9 +135,9 @@ Updates a user's password or score
 }
 ```
 
-If the route is being utilized for a password update, do not include the field "new_banter". The same is true for if you are updating banter score, do not include the field "new_password".
+The "type" key determines which update will occur. The third field corresponds to type, and can either be "new_password" or "new_banter", containing a string and an integer, respectively. 
 
-###### **POST /api/users/logon/**
+#### **POST /api/users/logon/**
 
 Route simulates logging on a user, receives a username and password and determines if the information is valid. 
 
@@ -152,18 +170,12 @@ Route simulates logging on a user, receives a username and password and determin
 }
 ```
 
-Outputs 2 and 3 result from invalid user information being given to the API. 
+Outputs 2 and 3 result from invalid password or username being given to the API, respectively. 
 
-###### **GET /api/users/<user_id_slug>/**
+#### **GET /api/users/<user_id_slug>/?api_key=xxxx**
 
 Route fetches the information for one user by userID. 
 
-*Input* 
-```
-{
-    "api_key": "xxxxxxxxx"
-}
-```
 *Output* 
 ```
 {
@@ -173,9 +185,25 @@ Route fetches the information for one user by userID.
 }
 ```
 
-## Section 5: Teams Routes
+#### **GET /api/users/leaders/?api_key=xxxx**
+Fetches the top five users by banter score. 
 
-###### **POST /api/teams/**
+*Output*
+```
+{
+    "leaders": [
+        {"name": "cmcgravey", "banter": 100},
+        {"name": "ianglee", "banter": 96},
+        {"name": "samimud", "banter": 94},
+        {"name": "wraineri", "banter": 26},
+        {"name": "cvenuti", "banter": 20}
+    ]
+}
+```
+
+## Teams
+
+#### **POST /api/teams/**
 
 Inserts a team into the database.
 
@@ -196,16 +224,10 @@ Inserts a team into the database.
 }
 ```
 
-###### **GET /api/teams/<team_id_slug>/**
+#### **GET /api/teams/<team_id_slug>/?api_key=xxxxx**
 
 Fetches team from the database according to teamID. 
 
-*Input* 
-```
-{
-    "api_key": "xxxxxxxx"
-}
-```
 *Output* 
 ```
 {
@@ -216,9 +238,9 @@ Fetches team from the database according to teamID.
 }
 ```
 
-## Section 6: Games Routes
+## Games
 
-###### **POST /api/games/**
+#### **POST /api/games/**
 
 Inserts a game into the database.
 
@@ -239,15 +261,21 @@ Inserts a game into the database.
 }
 ```
 
-###### **POST /api/games/<game_id_slug>/**
+#### **POST /api/games/<game_id_slug>/**
 
-Updates the status of a game. Game statuses can be one of three values in the database, 'PENDING', 'IN PLAY', or 'COMPLETE'.
+Updates the score of a game and time elapsed, also can be used to update the game status. Game statuses can be one of three values in the database, 'PENDING', 'PREGAME', 'IN PLAY', or 'COMPLETE'.
 
 *Input* 
 ```
 {
     "api_key": "xxxxxxxxxx",
-    "update": "IN PLAY"
+    "update": [1, 0, "23:42"]
+}
+OR
+{
+    "api_key": "xxxxxxx",
+    "update": [0, 0, "00:00"],
+    "status": "IN PLAY"
 }
 ```
 *Output* 
@@ -255,24 +283,21 @@ Updates the status of a game. Game statuses can be one of three values in the da
 {
     "gameID": 1,
     "team1": 1,
+    "team1_score": 1,
     "team2": 2,
+    "team2_score": 0,
+    "time_elapsed": "23:42"
     "status": "IN PLAY",
     "num_questions": 0
 }
 ```
 
-Updates to the num_questions field are not performed by this route. Instead, num_questions is updated automatically as a question is inserted to the database pertaining to a particular gameID. 
+Every time the route is used, an "update" field must be specified. The "status" field is completely optional, if specified, the status of the game will also be updated. 
 
-###### **GET /api/games/<game_id_slug>/**
+#### **GET /api/games/<game_id_slug>/?api_key=xxxxx**
 
 Fetches one game by gameID. 
 
-*Input* 
-```
-{
-    "api_key": "xxxxxxxxx"
-}
-```
 *Output*
 ```
 {
@@ -284,17 +309,10 @@ Fetches one game by gameID.
 }
 ```
 
-###### **GET /api/games/**
+#### **GET /api/games/status/<status_slug>/?api_key=xxxx**
 
-Fetches all games of a particular status, i.e. 'PENDING', 'IN PLAY', 'COMPLETED'
+Fetches all games of a particular status, i.e. 'PENDING', 'IN PLAY', 'COMPLETED'.
 
-*Input* 
-```
-{
-    "api_key": "xxxxxxxxxx",
-    "status": "IN PLAY"
-}
-```
 *Output* 
 ```
 {
@@ -317,9 +335,11 @@ Fetches all games of a particular status, i.e. 'PENDING', 'IN PLAY', 'COMPLETED'
 }
 ```
 
-## Section 7: Questions Routes
+The <status_slug> argument must be one of the specified statuses, 'PENDING', 'PREGAME', 'IN PLAY', or 'COMPLETE'.
 
-###### **POST /api/questions/<game_id_slug>/**
+## Questions
+
+#### **POST /api/questions/<game_id_slug>/**
 
 Inserts a question into the database for the specified gameID. 
 
@@ -362,7 +382,7 @@ Inserts a question into the database for the specified gameID.
 
 This route requires a significant amount of information from the backend. When the route is called, each question is inserted into the database with an answer of 'PENDING'. Once the question is updated, this field will contain the option for the answer, and can be used to determine the accuracy of user answers. 
 
-###### **POST /api/questions/update/<question_id_slug>/**
+#### **POST /api/questions/update/<question_id_slug>/**
 
 Updates the answer field of a question in the database. 
 
@@ -383,18 +403,12 @@ Updates the answer field of a question in the database.
 }
 ```
 
-After this route is called, each user's answer for the particular question is cross checked with the newly inserted correct answer. If the user is correct, their score is updated with the 'worth' parameter, if not, their score is decreased by the 'decrease' parameter. IMPORTANT: When the answer is inserted it must be one of the three strings ['OPT1', 'OPT2', 'OPT3'], else there will be serious errors. 
+After this route is called, each user's answer for the particular question is cross checked with the newly inserted correct answer. If the user is correct, their score is updated with the 'worth' parameter, if not, their score is decreased by the 'decrease' parameter. <b>IMPORTANT</b>: When the answer is inserted it must be one of the three strings ['opt1', 'opt2', 'opt3'], else there will be serious errors. 
 
-###### **GET /api/questions/<game_id_slug>/**
+#### **GET /api/questions/<game_id_slug>/?api_key=xxxx**
 
 Fetches all the questions pertaining to a specific gameID. 
 
-*Input*
-```
-{
-    "api_key": "xxxxxxxxx"
-}
-```
 *Output* 
 ```
 {
@@ -426,11 +440,11 @@ Fetches all the questions pertaining to a specific gameID.
 }
 ```
 
-Questions are fetched whether they have been completed or not. 
+Questions are fetched whether they have been resolved or not, i.e. whether their answer is decided or still 'PENDING'.
 
-## Section 8: Answers Routes
+## Answers
 
-###### **POST /api/answers/<question_id_slug>/<user_id_slug>/**
+#### **POST /api/answers/<question_id_slug>/<user_id_slug>/**
 
 Inserts an answer to a particular question, for a particular user. 
 
@@ -451,4 +465,4 @@ Inserts an answer to a particular question, for a particular user.
 }
 ```
 
-All answers are inserted with a 'PENDING' status. The status is updated upon insertion of the answer to a particular question. Statuses are updated alongside user scores. The actual answer should always be inserted as one of ['OPT1', 'OPT2', 'OPT3']. The answer should not be answered as the literal text for the option, this will cause serious issues. 
+All answers are inserted with a 'PENDING' status. The status is updated upon insertion of the answer to a particular question. Statuses are updated alongside user scores. The actual answer should always be inserted as one of ['opt1', 'opt2', 'opt3']. The answer should not be answered as the literal text for the option, this will cause serious issues. 

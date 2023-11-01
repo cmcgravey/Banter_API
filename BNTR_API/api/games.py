@@ -72,8 +72,7 @@ def update_game(game_id_slug):
             "RETURNING * ",
             (msg['status'], game_id_slug, )
         )
-    
-    game_update = cur.fetchall()
+        game_update = cur.fetchall()
     
     context = {
         "gameID": game_update[0]['gameID'],
