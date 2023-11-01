@@ -3,14 +3,14 @@
 By: Colin McGravey
 
 ### <em>Table of Contents</em>
-**[Section 1: Scripts](#scripts)**
-**[Section 2: Basic Request Syntax](#basic-request-syntax)**
-**[Section 3: Routes](#routes)**
-**[Section 4: Users](#users)**
-**[Section 5: Teams](#teams)**
-**[Section 6: Games](#games)**
-**[Section 7: Questions](#questions)**
-**[Section 8: Answers](#answers)**
+**[Section 1: Scripts](#scripts)**<br>
+**[Section 2: Basic Request Syntax](#basic-request-syntax)**<br>
+**[Section 3: Routes](#routes)**<br>
+**[Section 4: Users](#users)**<br>
+**[Section 5: Teams](#teams)**<br>
+**[Section 6: Games](#games)**<br>
+**[Section 7: Questions](#questions)**<br>
+**[Section 8: Answers](#answers)**<br>
 
 
 ## Scripts 
