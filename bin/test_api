@@ -5,7 +5,6 @@
 # Stop on errors
 # See https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
 set -Eeuo pipefail
-set -x
 
 usage() {
   echo "Usage: $0 (deployed | local)"
@@ -37,21 +36,21 @@ case $1 in
     # Verify user's login information
     curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "username": "samimud", "password": "buttfart"}' http://ec2-34-238-139-153.compute-1.amazonaws.com/api/users/logon/
 
-    # Fetch user's information
-    curl -X GET -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b"}' http://ec2-34-238-139-153.compute-1.amazonaws.com/api/users/2/
+    # GET user's information
+    curl -X GET http://ec2-34-238-139-153.compute-1.amazonaws.com/api/users/2/?api_key=87ab0a3db51d297d3d1cf2d4dcdcb71b
 
     # Insert two teams into the database
     curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "name": "Chelsea", "abbr": "CHE", "logo": "chelsea.png"}' http://ec2-34-238-139-153.compute-1.amazonaws.com/api/teams/
     curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "name": "Manchester United", "abbr": "UTD", "logo": "man_utd.png"}' http://ec2-34-238-139-153.compute-1.amazonaws.com/api/teams/
 
-    # Fetch team information
-    curl -X GET -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b"}' http://ec2-34-238-139-153.compute-1.amazonaws.com/api/teams/1/
+    # GET team information
+    curl -X GET http://ec2-34-238-139-153.compute-1.amazonaws.com/api/teams/1/?api_key=87ab0a3db51d297d3d1cf2d4dcdcb71b
 
     # Insert game into the database 
     curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "teamID1": "1", "teamID2": "2"}' http://ec2-34-238-139-153.compute-1.amazonaws.com/api/games/
 
     # GET all games with PENDING status
-    curl -X GET http://ec2-34-238-139-153.compute-1.amazonaws.com/api/games/?api_key=87ab0a3db51d297d3d1cf2d4dcdcb71b
+    curl -X GET http://ec2-34-238-139-153.compute-1.amazonaws.com/api/games/status/PENDING/?api_key=87ab0a3db51d297d3d1cf2d4dcdcb71b
 
     # GET game by gameID 
     curl -X GET http://ec2-34-238-139-153.compute-1.amazonaws.com/api/games/1/?api_key=87ab0a3db51d297d3d1cf2d4dcdcb71b
@@ -63,7 +62,7 @@ case $1 in
     curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "question_stage": "Pregame", "label": "h2h", "question": "Who is going to win?", "opt1": ["Everton", 15, 6], "opt2": ["Liverpool", 36, 14], "opt3": ["Draw", 17, 6]}' http://ec2-34-238-139-153.compute-1.amazonaws.com/api/questions/1/
 
     # Fetch questions for gameID 1 
-    curl -X GET -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b"}' http://ec2-34-238-139-153.compute-1.amazonaws.com/api/questions/1/
+    curl -X GET http://ec2-34-238-139-153.compute-1.amazonaws.com/api/questions/1/?api_key=87ab0a3db51d297d3d1cf2d4dcdcb71b
 
     # Insert answers for questions 
     curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "answer": "opt1"}' http://ec2-34-238-139-153.compute-1.amazonaws.com/api/answers/1/1/
@@ -74,12 +73,12 @@ case $1 in
     curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "answer": "opt1"}' http://ec2-34-238-139-153.compute-1.amazonaws.com/api/questions/update/1/
 
     # View user's scores updates 
-    curl -X GET -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b"}' http://ec2-34-238-139-153.compute-1.amazonaws.com/api/users/1/
-    curl -X GET -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b"}' http://ec2-34-238-139-153.compute-1.amazonaws.com/api/users/2/
-    curl -X GET -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b"}' http://ec2-34-238-139-153.compute-1.amazonaws.com/api/users/3/
+    curl -X GET http://ec2-34-238-139-153.compute-1.amazonaws.com/api/users/1/?api_key=87ab0a3db51d297d3d1cf2d4dcdcb71b
+    curl -X GET http://ec2-34-238-139-153.compute-1.amazonaws.com/api/users/2/?api_key=87ab0a3db51d297d3d1cf2d4dcdcb71b
+    curl -X GET http://ec2-34-238-139-153.compute-1.amazonaws.com/api/users/3/?api_key=87ab0a3db51d297d3d1cf2d4dcdcb71b
 
     # Fetch leaderboards
-    curl -X GET -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b"}' http://ec2-34-238-139-153.compute-1.amazonaws.com/api/users/leaders/
+    curl -X GET http://ec2-34-238-139-153.compute-1.amazonaws.com/api/users/leaders/?api_key=87ab0a3db51d297d3d1cf2d4dcdcb71b
     ;;
   "local")
     # Display routes 
