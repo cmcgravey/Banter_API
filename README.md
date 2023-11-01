@@ -29,7 +29,7 @@ This script takes one keyword argument, determining whether to test the API runn
 
 
 ## Basic Request Syntax 
-All routes can be accessed on your local machine at http://localhost:8000 or on the actual instance, running at http://ec2-34-238-139-153.compute-1.amazonaws.com.
+All routes can be accessed on your local machine at http://localhost:8000/api/routes/ or on the actual instance, running at https://www.banter-api.com/api/routes/.
 
 All <b>POST</b> requests should be made with a JSON body. Inside the JSON, for every request made, include the private API key in a field titled "api_key". Each request will demand for different fields to be included and will be explained later in this document. All <b>GET</b> requests take the API key as a URL keyword argument. The only route that can be accessed with no API key is /api/routes/, which displays the possible API endpoints. 
 
