@@ -42,9 +42,7 @@ def insert_team():
 @BNTR_API.app.route('/api/teams/<team_id_slug>/')
 def get_team(team_id_slug):
     """Retrieve team from the database."""
-    msg = flask.request.json
-
-    if not (verify_key(msg['api_key'])):
+    if not (verify_key(flask.request.args.get('api_key'))):
         context = {'msg': 'invalid key'}
         return flask.jsonify(**context), 403
 

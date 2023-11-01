@@ -100,9 +100,7 @@ def update_question_answer(question_id_slug):
 @BNTR_API.app.route('/api/questions/<game_id_slug>/')
 def fetch_questions_for_game(game_id_slug):
     """Fetch questions for a specific game."""
-    msg = flask.request.json
-
-    if not (verify_key(msg['api_key'])):
+    if not (verify_key(flask.request.args.get('api_key'))):
         context = {'msg': 'invalid key'}
         return flask.jsonify(**context), 403
     

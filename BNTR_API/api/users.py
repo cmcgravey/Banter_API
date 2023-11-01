@@ -131,9 +131,7 @@ def verify_user():
 @BNTR_API.app.route('/api/users/<user_id_slug>/')
 def fetch_user(user_id_slug):
     """Fetch user information."""
-    msg = flask.request.json
-
-    if not (verify_key(msg['api_key'])):
+    if not (verify_key(flask.request.args.get('api_key'))):
         context = {'msg': 'invalid key'}
         return flask.jsonify(**context), 403
     
@@ -159,9 +157,7 @@ def fetch_user(user_id_slug):
 @BNTR_API.app.route('/api/users/leaders/')
 def fetch_leaderboards():
     """Fetch leaderboard information."""
-    msg = flask.request.json
-
-    if not (verify_key(msg['api_key'])):
+    if not (verify_key(flask.request.args.get('api_key'))):
         context = {'msg': 'invalid key'}
         return flask.jsonify(**context), 403
     

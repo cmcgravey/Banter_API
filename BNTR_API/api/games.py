@@ -92,9 +92,7 @@ def update_game(game_id_slug):
 @BNTR_API.app.route('/api/games/<game_id_slug>/')
 def retrieve_game(game_id_slug):
     """Retrieve game from database."""
-    msg = flask.request.json
-
-    if not (verify_key(msg['api_key'])):
+    if not (verify_key(flask.request.args.get('api_key'))):
         context = {'msg': 'invalid key'}
         return flask.jsonify(**context), 403
     
@@ -107,33 +105,30 @@ def retrieve_game(game_id_slug):
         (game_id_slug, )
     )
 
-    game_info = cur.fetchall()
+    game_info = cur.fetchone()
 
     context = {
         "gameID": game_id_slug,
-        "teamID1": game_info[0]['teamID1'],
-        "team1_score": game_info[0]['team1_score'],
-        "teamID2": game_info[0]['teamID2'],
-        "team2_score": game_info[0]['team2_score'],
-        "time_elapsed": game_info[0]['time_elapsed'],
-        "status": game_info[0]['status'],
-        "num_questions": game_info[0]['num_questions']
+        "teamID1": game_info['teamID1'],
+        "team1_score": game_info['team1_score'],
+        "teamID2": game_info['teamID2'],
+        "team2_score": game_info['team2_score'],
+        "time_elapsed": game_info['time_elapsed'],
+        "status": game_info['status'],
+        "num_questions": game_info['num_questions']
     }
 
     return flask.jsonify(**context), 200
 
 
-@BNTR_API.app.route('/api/games/')
-def fetch_games():
+@BNTR_API.app.route('/api/games/status/<status>/')
+def fetch_games(status):
     """Fetch all games of a certain status."""
-    msg = flask.request.json
-
-    if not (verify_key(msg['api_key'])):
+    if not (verify_key(flask.request.args.get('api_key'))):
         context = {'msg': 'invalid key'}
         return flask.jsonify(**context), 403
     
     connection = BNTR_API.model.get_db()
-    status = msg['status']
 
     cur = connection.execute(
         "SELECT * "
