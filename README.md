@@ -48,9 +48,9 @@ All <b>POST</b> requests should be made with a JSON body. Inside the JSON, for e
 http://localhost:8000/api/users/1/?api_key=xxxxxxx
 ```
 
-## Routes
+## **Routes**
 
-###### http://ec2-34-238-139-153.compute-1.amazonaws.com/api/routes
+#### **GET /api/routes/**
 
 Request body is unneccessary for this route as it does not require an API key, nor any extraneous information. Response will be in the following form ...
 
@@ -95,7 +95,8 @@ Inserts one user into the database.
 {
     "api_key": "xxxxxxxxxxx",
     "username": "cmcgravey", 
-    "password": "password" 
+    "password": "password", 
+    "full_name": "Colin McGravey"
 }
 ```
 
@@ -104,6 +105,7 @@ Inserts one user into the database.
 {
     "userID": 1,
     "username": "cmcgravey",
+    "full_name": "Colin McGravey",
     "banter": 0
 }
 ```
@@ -181,7 +183,8 @@ Route fetches the information for one user by userID.
 {
     "userID": 1,
     "username": "cmcgravey",
-    "banter": 0
+    "banter": 0, 
+    "full_name": "Colin McGravey"
 }
 ```
 

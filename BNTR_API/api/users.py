@@ -16,12 +16,14 @@ def insert_user():
 
     username = msg['username']
     password = hash_password(msg['password'])
+    full_name = msg['full_name']
+
     banter = 0
 
     connection.execute(
-        "INSERT INTO users(username, password, banter) "
-        "VALUES (?, ?, ?) ",
-        (username, password, banter, )
+        "INSERT INTO users(username, password, banter, fullname) "
+        "VALUES (?, ?, ?, ?) ",
+        (username, password, banter, full_name, )
     )
 
     cur = connection.execute(
@@ -34,7 +36,8 @@ def insert_user():
     context = {
         "userID": lastid['last_insert_rowid()'],
         "username": username, 
-        "banter": banter
+        "banter": banter, 
+        "full_name": full_name
     }
 
     return flask.jsonify(**context), 200
@@ -148,7 +151,8 @@ def fetch_user(user_id_slug):
     context = {
         "userID": user_id_slug, 
         "username": info['username'], 
-        "banter": info['banter']
+        "banter": info['banter'],
+        "full_name": info['fullname']
     }
 
     return flask.jsonify(**context), 200

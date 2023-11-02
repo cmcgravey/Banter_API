@@ -5,6 +5,7 @@ CREATE TABLE Users(
     username VARCHAR(25) NOT NULL,
     password VARCHAR(50) NOT NULL,
     banter INTEGER NOT NULL,
+    fullname VARCHAR(100) NOT NULL,
     UNIQUE(username)
 );
 
