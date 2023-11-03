@@ -132,7 +132,8 @@ def fetch_games(status):
     cur = connection.execute(
         "SELECT * "
         "FROM games "
-        "WHERE status = ? ",
+        "WHERE status = ? "
+        "ORDER BY gameID ASC",
         (status, )
     )
     games = cur.fetchall()
