@@ -469,3 +469,20 @@ Inserts an answer to a particular question, for a particular user.
 ```
 
 All answers are inserted with a 'PENDING' status. The status is updated upon insertion of the answer to a particular question. Statuses are updated alongside user scores. The actual answer should always be inserted as one of ['opt1', 'opt2', 'opt3']. The answer should not be answered as the literal text for the option, this will cause serious issues. 
+
+#### **GET /api/answers/<question_id_slug>/<user_id_slug>/?api_key=xxxx**
+
+Returns whether a user has logged an answer for a particular question or not, along with their answer if True. 
+
+*Output*
+```
+{
+    "answered": False,
+    "answer": None
+}
+OR 
+{
+    "answered": True, 
+    "answer": opt1
+}
+```
