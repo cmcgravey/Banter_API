@@ -39,6 +39,7 @@ def insert_team():
 
     return flask.jsonify(**context), 200
 
+
 @BNTR_API.app.route('/api/teams/<team_id_slug>/')
 def get_team(team_id_slug):
     """Retrieve team from the database."""

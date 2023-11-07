@@ -16,6 +16,7 @@ def insert_question(game_id_slug):
     connection = BNTR_API.model.get_db()
 
     question_stage = msg['question_stage']
+    locked = "False"
     label = msg['label']
     text = msg['question']
 
@@ -31,9 +32,9 @@ def insert_question(game_id_slug):
     answer = 'PENDING'
 
     connection.execute(
-        "INSERT INTO questions(gameID, text, label, question_stage, opt1, worth1, decrease1, opt2, worth2, decrease2, opt3, worth3, decrease3, answer) "
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
-        (game_id_slug, text, label, question_stage, opt1, worth1, decrease1, opt2, worth2, decrease2, opt3, worth3, decrease3, answer, )
+        "INSERT INTO questions(gameID, locked, text, label, question_stage, opt1, worth1, decrease1, opt2, worth2, decrease2, opt3, worth3, decrease3, answer) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
+        (game_id_slug, locked, text, label, question_stage, opt1, worth1, decrease1, opt2, worth2, decrease2, opt3, worth3, decrease3, answer, )
     )
 
     cur = connection.execute(
@@ -119,6 +120,7 @@ def fetch_questions_for_game(game_id_slug):
     for ques in questions:
         dict_entry = {
             "questionID": ques['questionID'],
+            "locked": ques['locked'],
             "gameID": ques['gameID'],
             "label": ques['label'],
             "stage": ques['question_stage'],
@@ -130,6 +132,31 @@ def fetch_questions_for_game(game_id_slug):
         }
         context['questions'].append(dict_entry)
     
+    return flask.jsonify(**context), 200
+
+
+@BNTR_API.app.route('/api/questions/<game_id_slug>/<stage_slug>/', methods=['POST'])
+def update_questions_by_stage(game_id_slug, stage_slug):
+    """Update question by question stage."""
+    msg = flask.request.json
+
+    if not (verify_key(msg['api_key'])):
+        context = {'msg': 'invalid key'}
+        return flask.jsonify(**context), 403
+    
+    connection = BNTR_API.model.get_db()
+
+    connection.execute(
+        "UPDATE questions "
+        "SET locked = ? "
+        "WHERE gameID = ? AND question_stage = ? ", 
+        ("True", game_id_slug, stage_slug, )
+    )
+    
+    context = {
+        "msg": "update successful"
+    }
+
     return flask.jsonify(**context), 200
 
 
@@ -187,6 +214,7 @@ def update_answers_and_scores(question_id_slug, msg):
     }
 
     return context
+
 
 def get_values(answer, question):
     """Get increase and decrease values for respective answer."""
