@@ -16,6 +16,7 @@ def insert_game():
 
     teamid1 = msg['teamID1']
     teamid2 = msg['teamID2']
+    league = msg['league']
     team1_score = 0
     team2_score = 0
     time_elapsed = '00:00'
@@ -23,9 +24,9 @@ def insert_game():
     num_questions = 0
 
     connection.execute(
-        "INSERT INTO games(teamID1, teamID2, team1_score, team2_score, time_elapsed, status, num_questions) "
-        "VALUES (?, ?, ?, ?, ?, ?, ?) ",
-        (teamid1, teamid2, team1_score, team2_score, time_elapsed, status, num_questions, )
+        "INSERT INTO games(league, teamID1, teamID2, team1_score, team2_score, time_elapsed, status, num_questions) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?) ",
+        (league, teamid1, teamid2, team1_score, team2_score, time_elapsed, status, num_questions, )
     )
 
     cur = connection.execute(
@@ -106,11 +107,26 @@ def retrieve_game(game_id_slug):
 
     game_info = cur.fetchone()
 
+    teamids = [game_info['teamID1'], game_info['teamID2']]
+    names = []
+    for num in teamids:
+        cur = connection.execute(
+            "SELECT name "
+            "FROM teams "
+            "WHERE teamID = ? ",
+            (num, )
+        )
+        name = cur.fetchone()['name']
+        names.append(name)
+
     context = {
         "gameID": game_id_slug,
+        "league": game_info['league'],
         "teamID1": game_info['teamID1'],
+        "team1_name": names[0],
         "team1_score": game_info['team1_score'],
         "teamID2": game_info['teamID2'],
+        "team2_name": names[1],
         "team2_score": game_info['team2_score'],
         "time_elapsed": game_info['time_elapsed'],
         "status": game_info['status'],
@@ -141,11 +157,26 @@ def fetch_games(status):
     context = {"games": []}
 
     for game in games:
+        teamids = [game['teamID1'], game['teamID2']]
+        names = []
+        for num in teamids:
+            cur = connection.execute(
+                "SELECT name "
+                "FROM teams "
+                "WHERE teamID = ? ",
+                (num, )
+            )
+            name = cur.fetchone()['name']
+            names.append(name)
+
         dict_entry = {
             "gameID": game['gameID'],
+            "league": game['league'],
             "teamID1": game['teamID1'],
+            "team1_name": names[0],
             "team1_score": game['team1_score'],
             "teamID2": game['teamID2'],
+            "team2_name": names[1],
             "team2_score": game['team2_score'],
             "time_elapsed": game['time_elapsed'],
             "status": game['status'],

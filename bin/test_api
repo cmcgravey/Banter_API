@@ -47,7 +47,7 @@ case $1 in
     curl -X GET https://www.banter-api.com/api/teams/1/?api_key=87ab0a3db51d297d3d1cf2d4dcdcb71b
 
     # Insert game into the database 
-    curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "teamID1": "1", "teamID2": "2"}' https://www.banter-api.com/api/games/
+    curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "teamID1": "1", "teamID2": "2", "league": "PREMIER"}' https://www.banter-api.com/api/games/
 
     # GET all games with PENDING status
     curl -X GET https://www.banter-api.com/api/games/status/PENDING/?api_key=87ab0a3db51d297d3d1cf2d4dcdcb71b
@@ -114,7 +114,7 @@ case $1 in
     curl -X GET http://localhost:8000/api/teams/1/?api_key=87ab0a3db51d297d3d1cf2d4dcdcb71b
 
     # Insert game into the database 
-    curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "teamID1": "1", "teamID2": "2"}' http://localhost:8000/api/games/
+    curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "teamID1": "1", "teamID2": "2", "league": "PREMIER"}' http://localhost:8000/api/games/
 
     # GET all games with PENDING status
     curl -X GET http://localhost:8000/api/games/status/PENDING/?api_key=87ab0a3db51d297d3d1cf2d4dcdcb71b
