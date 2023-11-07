@@ -120,7 +120,7 @@ def retrieve_game(game_id_slug):
         names.append(name)
 
     context = {
-        "gameID": game_id_slug,
+        "gameID": int(game_id_slug),
         "league": game_info['league'],
         "teamID1": game_info['teamID1'],
         "team1_name": names[0],
