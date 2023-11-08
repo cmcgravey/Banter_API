@@ -56,10 +56,12 @@ case $1 in
     curl -X GET https://www.banter-api.com/api/games/1/?api_key=87ab0a3db51d297d3d1cf2d4dcdcb71b
 
     # Update game status to IN PLAY
-    curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "update": [1, 3, "22:00"], "status": "IN PLAY"}' https://www.banter-api.com/api/games/1/
+    curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "update": [1, 3, "22:00"], "status": "IN_PLAY"}' https://www.banter-api.com/api/games/1/
 
     # Insert questions for gameID 1 
     curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "question_stage": "pregame", "label": "h2h", "question": "Who is going to win?", "opt1": ["Everton", 15, 6], "opt2": ["Liverpool", 36, 14], "opt3": ["Draw", 17, 6]}' https://www.banter-api.com/api/questions/1/
+    curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "question_stage": "ingame", "label": "h2h", "question": "Most Yellow Cards played?", "opt1": ["Everton", 15, 6], "opt2": ["Liverpool", 36, 14], "opt3": ["Draw", 17, 6]}' https://www.banter-api.com/api/questions/1/
+
 
     # Fetch questions for gameID 1 
     curl -X GET https://www.banter-api.com/api/questions/1/?api_key=87ab0a3db51d297d3d1cf2d4dcdcb71b
@@ -71,6 +73,10 @@ case $1 in
 
     # Lock question
     curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b"}' https://www.banter-api.com/api/questions/1/pregame/
+
+    # Fetch questions via user id and game id
+    curl -X GET https://www.banter-api.com/api/questions/1/1/?api_key=87ab0a3db51d297d3d1cf2d4dcdcb71b
+    curl -X GET https://www.banter-api.com/api/questions/2/1/?api_key=87ab0a3db51d297d3d1cf2d4dcdcb71b
 
     # Fetch answers for user
     curl -X GET https://www.banter-api.com/api/answers/1/2/
@@ -126,14 +132,15 @@ case $1 in
     curl -X GET http://localhost:8000/api/games/1/?api_key=87ab0a3db51d297d3d1cf2d4dcdcb71b
 
     # Update game status to IN PLAY
-    curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "update": [1, 3, "22:00"], "status": "IN PLAY"}' http://localhost:8000/api/games/1/
+    curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "update": [1, 3, "22:00"], "status": "IN_PLAY"}' http://localhost:8000/api/games/1/
 
     # Insert questions for gameID 1 
     curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "question_stage": "Pregame", "label": "h2h", "question": "Who is going to win?", "opt1": ["Everton", 15, 6], "opt2": ["Liverpool", 36, 14], "opt3": ["Draw", 17, 6]}' http://localhost:8000/api/questions/1/
+    curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "question_stage": "ingame", "label": "h2h", "question": "Most Yellow Cards played?", "opt1": ["Everton", 15, 6], "opt2": ["Liverpool", 36, 14], "opt3": ["Draw", 17, 6]}' http://localhost:8000/api/questions/1/
 
     # Fetch questions for gameID 1 
-    curl -X GET http://localhost:8000/api/questions/1/?api_key=87ab0a3db51d297d3d1cf2d4dcdcb71b
-
+    curl -X GET http://localhost:8000/api/questions/1/1/?api_key=87ab0a3db51d297d3d1cf2d4dcdcb71b
+    
     # Insert answers for questions 
     curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "answer": "opt1"}' http://localhost:8000/api/answers/1/1/
     curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "answer": "opt2"}' http://localhost:8000/api/answers/1/2/
@@ -141,6 +148,10 @@ case $1 in
 
     # Lock question
     curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b"}' http://localhost:8000/api/questions/1/pregame/
+
+    # Fetch questions via user id and game id
+    curl -X GET http://localhost:8000/api/questions/1/1/?api_key=87ab0a3db51d297d3d1cf2d4dcdcb71b
+    curl -X GET http://localhost:8000/api/questions/1/2/?api_key=87ab0a3db51d297d3d1cf2d4dcdcb71b
 
     # Fetch answers for user
     curl -X GET http://localhost:8000/api/answers/1/2/?api_key=87ab0a3db51d297d3d1cf2d4dcdcb71b

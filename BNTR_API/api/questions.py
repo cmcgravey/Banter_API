@@ -160,6 +160,62 @@ def update_questions_by_stage(game_id_slug, stage_slug):
     return flask.jsonify(**context), 200
 
 
+@BNTR_API.app.route('/api/questions/<game_id_slug>/<user_id_slug>/')
+def fetch_questions_by_user(game_id_slug, user_id_slug):
+    """Fetch questions according to user answers."""
+    if not (verify_key(flask.request.args.get('api_key'))):
+        context = {'msg': 'invalid key'}
+        return flask.jsonify(**context), 403
+    
+    connection = BNTR_API.model.get_db()
+
+    cur = connection.execute(
+        "SELECT * "
+        "FROM questions "
+        "WHERE gameID = ? ",
+        (game_id_slug, )
+    )
+    questions = cur.fetchall()
+
+    context = {"questions": []}
+    user_answer = None
+    answered = None
+
+    for ques in questions:
+
+        cursor = connection.execute(
+            "SELECT * "
+            "FROM answers "
+            "WHERE userID = ? AND questionID = ? ",
+            (user_id_slug, ques['questionID'], )
+        )
+        answer = cursor.fetchone()
+        if answer == None:
+            user_answer = "NULL"
+            answered = "False"
+        else:
+            user_answer = answer['answer']
+            answered = "True"
+
+        dict_entry = {
+            "questionID": ques['questionID'],
+            "locked": ques['locked'],
+            "gameID": ques['gameID'],
+            "label": ques['label'],
+            "stage": ques['question_stage'],
+            "text": ques['text'],
+            "options": [ques['opt1'], ques['opt2'], ques['opt3']],
+            "increases": [ques['worth1'], ques['worth2'], ques['worth3']],
+            "decreases": [ques['decrease1'], ques['decrease2'], ques['decrease3']],
+            "answer": ques['answer'],
+            "user_answer": user_answer,
+            "answered": answered
+        }
+        context["questions"].append(dict_entry)
+    
+    return flask.jsonify(**context), 200
+
+
 def update_answers_and_scores(question_id_slug, msg):
     """Update answer status and user scores."""
     connection = BNTR_API.model.get_db()
