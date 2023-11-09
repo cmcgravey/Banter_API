@@ -20,7 +20,7 @@ def insert_team():
     logo = msg['logo']
 
     connection.execute(
-        "INSERT OR IGNORE INTO teams(logo, name, abbr) "
+        "INSERT INTO teams(logo, name, abbr) "
         "VALUES (?, ?, ?) ",
         (logo, name, abbr, )
     )
