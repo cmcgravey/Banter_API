@@ -18,6 +18,7 @@ CREATE TABLE Teams(
 
 CREATE TABLE Games(
     gameID INTEGER PRIMARY KEY AUTOINCREMENT,
+    fixtureID INTEGER NOT NULL,
     league VARCHAR(50) NOT NULL,
     teamID1 INTEGER NOT NULL,
     teamID2 INTEGER NOT NULL,
@@ -26,6 +27,7 @@ CREATE TABLE Games(
     time_elapsed VARCHAR(20) NOT NULL,
     status VARCHAR(15) NOT NULL,
     num_questions INTEGER NOT NULL,
+    UNIQUE(fixtureID),
     FOREIGN KEY(teamID1) REFERENCES Teams(teamID), 
     FOREIGN KEY(teamID2) REFERENCES Teams(teamID)
 );

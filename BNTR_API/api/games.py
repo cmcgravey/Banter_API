@@ -14,6 +14,7 @@ def insert_game():
     
     connection = BNTR_API.model.get_db()
 
+    fixtureID = msg['fixtureID']
     teamid1 = msg['teamID1']
     teamid2 = msg['teamID2']
     league = msg['league']
@@ -24,9 +25,9 @@ def insert_game():
     num_questions = 0
 
     connection.execute(
-        "INSERT INTO games(league, teamID1, teamID2, team1_score, team2_score, time_elapsed, status, num_questions) "
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?) ",
-        (league, teamid1, teamid2, team1_score, team2_score, time_elapsed, status, num_questions, )
+        "INSERT INTO games(fixtureID, league, teamID1, teamID2, team1_score, team2_score, time_elapsed, status, num_questions) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ",
+        (fixtureID, league, teamid1, teamid2, team1_score, team2_score, time_elapsed, status, num_questions, )
     )
 
     cur = connection.execute(
@@ -39,7 +40,8 @@ def insert_game():
     context = {
         "id": lastid['last_insert_rowid()'],
         "team1": teamid1,
-        "team2": teamid2
+        "team2": teamid2,
+        "fixtureID": fixtureID
     }
 
     return flask.jsonify(**context), 200
