@@ -5,3 +5,4 @@ from BNTR_API.api.games import insert_game, update_game, retrieve_game
 from BNTR_API.api.users import insert_user, update_password, fetch_user, verify_user
 from BNTR_API.api.questions import insert_question, update_question_answer, fetch_questions_for_game
 from BNTR_API.api.answers import insert_answer
+from BNTR_API.api.search import fetch_by_username

@@ -115,6 +115,9 @@ case $1 in
     # Fetch user's information
     curl -X GET http://localhost:8000/api/users/2/?api_key=87ab0a3db51d297d3d1cf2d4dcdcb71b
 
+    # Search for user by username
+    curl -X GET http://localhost:8000/api/search/cmcg/?api_key=87ab0a3db51d297d3d1cf2d4dcdcb71b
+
     # Insert two teams into the database
     curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "name": "Chelsea", "abbr": "CHE", "logo": "chelsea.png"}' http://localhost:8000/api/teams/
     curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "name": "Manchester United", "abbr": "UTD", "logo": "man_utd.png"}' http://localhost:8000/api/teams/
