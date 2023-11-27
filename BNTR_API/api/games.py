@@ -18,6 +18,7 @@ def insert_game():
     teamid1 = msg['teamID1']
     teamid2 = msg['teamID2']
     league = msg['league']
+    start_time = msg['game_string']
     team1_score = 0
     team2_score = 0
     time_elapsed = '00:00'
@@ -25,9 +26,9 @@ def insert_game():
     num_questions = 0
 
     connection.execute(
-        "INSERT INTO games(fixtureID, league, teamID1, teamID2, team1_score, team2_score, time_elapsed, status, num_questions) "
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ",
-        (fixtureID, league, teamid1, teamid2, team1_score, team2_score, time_elapsed, status, num_questions, )
+        "INSERT INTO games(fixtureID, league, teamID1, teamID2, team1_score, team2_score, time_elapsed, status, num_questions, start_time) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
+        (fixtureID, league, teamid1, teamid2, team1_score, team2_score, time_elapsed, status, num_questions, start_time, )
     )
 
     cur = connection.execute(
@@ -76,6 +77,15 @@ def update_game(game_id_slug):
             (msg['status'], game_id_slug, )
         )
         game_update = cur.fetchall()
+    elif 'start_time' in msg:
+        cur = connection.execute(
+            "UPDATE games "
+            "SET start_time = ? "
+            "WHERE gameID = ? "
+            "RETURNING * ",
+            (msg['start_time'], game_id_slug, )
+        )
+        game_update = cur.fetchall()
     
     context = {
         "gameID": game_update[0]['gameID'],
@@ -85,7 +95,8 @@ def update_game(game_id_slug):
         "team2_score": game_update[0]['team2_score'],
         "time_elapsed": game_update[0]['time_elapsed'],
         "status": game_update[0]['status'],
-        "num_questions": game_update[0]['num_questions']
+        "num_questions": game_update[0]['num_questions'],
+        "start_time": game_update[0]['start_time']
     }
 
     return flask.jsonify(**context), 200
@@ -132,7 +143,8 @@ def retrieve_game(game_id_slug):
         "team2_score": game_info['team2_score'],
         "time_elapsed": game_info['time_elapsed'],
         "status": game_info['status'],
-        "num_questions": game_info['num_questions']
+        "num_questions": game_info['num_questions'],
+        "start_time": game_info['start_time']
     }
 
     return flask.jsonify(**context), 200
@@ -183,6 +195,7 @@ def fetch_games(status):
             "time_elapsed": game['time_elapsed'],
             "status": game['status'],
             "num_questions": game['num_questions'],
+            "start_time": game['start_time']
         }
         context['games'].append(dict_entry)
     

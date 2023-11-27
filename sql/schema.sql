@@ -27,6 +27,7 @@ CREATE TABLE Games(
     time_elapsed VARCHAR(20) NOT NULL,
     status VARCHAR(15) NOT NULL,
     num_questions INTEGER NOT NULL,
+    start_time VARCHAR(100) NOT NULL,
     UNIQUE(fixtureID),
     FOREIGN KEY(teamID1) REFERENCES Teams(teamID), 
     FOREIGN KEY(teamID2) REFERENCES Teams(teamID)
