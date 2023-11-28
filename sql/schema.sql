@@ -10,6 +10,14 @@ CREATE TABLE Users(
     UNIQUE(username)
 );
 
+CREATE TABLE Following(
+    userID1 INTEGER NOT NULL,
+    userID2 INTEGER NOT NULL,
+    PRIMARY KEY(userID1, userID2),
+    FOREIGN KEY(userID1) REFERENCES Users(userID),
+    FOREIGN KEY(userID2) REFERENCES Users(userID)
+);
+
 CREATE TABLE Teams(
     teamID INTEGER PRIMARY KEY AUTOINCREMENT,
     logo VARCHAR(100) NOT NULL,

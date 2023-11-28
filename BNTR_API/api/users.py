@@ -2,6 +2,7 @@
 import flask 
 import BNTR_API
 from BNTR_API.api.authenticate import verify_key, hash_password, verify_password
+from BNTR_API.api.following import get_num_followers_following
 
 @BNTR_API.app.route('/api/users/', methods=['POST'])
 def insert_user():
@@ -149,13 +150,16 @@ def fetch_user(user_id_slug):
         (user_id_slug, )
     )
     info = cur.fetchone()
+    followers, following = get_num_followers_following(connection, user_id_slug)
 
     context = {
         "userID": user_id_slug, 
         "username": info['username'], 
         "banter": info['banter'],
         "full_name": info['fullname'],
-        "profile_picture": info['profile_picture']
+        "profile_picture": info['profile_picture'], 
+        "num_followers": followers, 
+        "num_following": following
     }
 
     return flask.jsonify(**context), 200
