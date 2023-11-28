@@ -17,13 +17,14 @@ def insert_user():
     username = msg['username']
     password = hash_password(msg['password'])
     full_name = msg['full_name']
+    profile_picture = msg['prof_pic']
 
-    banter = 0
+    banter = 20
 
     connection.execute(
-        "INSERT INTO users(username, password, banter, fullname) "
-        "VALUES (?, ?, ?, ?) ",
-        (username, password, banter, full_name, )
+        "INSERT INTO users(username, password, banter, fullname, profile_picture) "
+        "VALUES (?, ?, ?, ?, ?) ",
+        (username, password, banter, full_name, profile_picture, )
     )
 
     cur = connection.execute(
@@ -37,7 +38,8 @@ def insert_user():
         "userID": lastid['last_insert_rowid()'],
         "username": username, 
         "banter": banter, 
-        "full_name": full_name
+        "full_name": full_name, 
+        "profile_picture": profile_picture
     }
 
     return flask.jsonify(**context), 200
@@ -152,7 +154,8 @@ def fetch_user(user_id_slug):
         "userID": user_id_slug, 
         "username": info['username'], 
         "banter": info['banter'],
-        "full_name": info['fullname']
+        "full_name": info['fullname'],
+        "profile_picture": info['profile_picture']
     }
 
     return flask.jsonify(**context), 200
@@ -168,7 +171,7 @@ def fetch_leaderboards():
     connection = BNTR_API.model.get_db()
 
     cur = connection.execute(
-        "SELECT username, banter "
+        "SELECT username, banter, profile_picture "
         "FROM users "
         "ORDER BY banter DESC ",
         ()
@@ -181,6 +184,6 @@ def fetch_leaderboards():
         if idx == 5:
             break
 
-        context['leaders'].append({"name": user['username'], "banter": user['banter']})
+        context['leaders'].append({"name": user['username'], "banter": user['banter'], "profile_picture": user['profile_picture']})
 
     return flask.jsonify(**context), 200

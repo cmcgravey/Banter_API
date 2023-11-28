@@ -96,10 +96,10 @@ case $1 in
     # Display routes 
     curl -X GET http://localhost:8000/api/routes/
 
-    # Insert users into the database 
-    curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "username": "cmcgravey", "password": "password", "full_name": "Colin McGravey"}' http://localhost:8000/api/users/
-    curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "username": "samimud", "password": "fartsniffer", "full_name": "Sami Muduroglu"}' http://localhost:8000/api/users/
-    curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "username": "ianglee", "password": "snifferfart", "full_name": "Ian Lee"}' http://localhost:8000/api/users/
+    # Insert users into the database
+    curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "username": "cmcgravey", "password": "password", "full_name": "Colin McGravey", "prof_pic": "man-u-logo"}' http://localhost:8000/api/users/
+    curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "username": "samimud", "password": "fartsniffer", "full_name": "Sami Muduroglu", "prof_pic": "man-u-logo"}' http://localhost:8000/api/users/
+    curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "username": "ianglee", "password": "snifferfart", "full_name": "Ian Lee", "prof_pic": "man-u-logo"}' http://localhost:8000/api/users/
 
     # Update existing user's password 
     curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "type": "password", "new_password": "buttfart"}' http://localhost:8000/api/users/2/

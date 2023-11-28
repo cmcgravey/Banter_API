@@ -31,6 +31,7 @@ def fetch_by_username(username):
         entry['userID'] = result['userID']
         entry['username'] = result['username']
         entry['banter'] = result['banter']
+        entry['profile_picture'] = result['profile_picture']
         context["results"].append(entry)
 
     return flask.jsonify(**context), 200

@@ -6,6 +6,7 @@ CREATE TABLE Users(
     password VARCHAR(50) NOT NULL,
     banter INTEGER NOT NULL,
     fullname VARCHAR(100) NOT NULL,
+    profile_picture VARCHAR(100) NOT NULL,
     UNIQUE(username)
 );
 
