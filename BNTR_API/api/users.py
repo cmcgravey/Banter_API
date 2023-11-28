@@ -171,9 +171,9 @@ def fetch_leaderboards():
     connection = BNTR_API.model.get_db()
 
     cur = connection.execute(
-        "SELECT username, banter, profile_picture "
+        "SELECT * "
         "FROM users "
-        "ORDER BY banter DESC ",
+        "ORDER BY banter DESC, username DESC ",
         ()
     )
     leaders = cur.fetchall()
@@ -181,9 +181,9 @@ def fetch_leaderboards():
     context = {"leaders": []}
 
     for idx, user in enumerate(leaders):
-        if idx == 5:
+        if idx == 8:
             break
 
-        context['leaders'].append({"name": user['username'], "banter": user['banter'], "profile_picture": user['profile_picture']})
+        context['leaders'].append({"name": user['username'], "banter": user['banter'], "profile_picture": user['profile_picture'], "userID": user['userID']})
 
     return flask.jsonify(**context), 200
