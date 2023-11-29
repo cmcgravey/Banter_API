@@ -5,3 +5,4 @@ var
 *.pem
 .DS_Store
 output.txt
+nohup.out
