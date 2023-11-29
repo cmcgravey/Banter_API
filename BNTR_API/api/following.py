@@ -31,6 +31,33 @@ def add_relationship():
     return flask.jsonify(**context), 200
 
 
+@BNTR_API.app.route('/api/unfollowing/', methods=['POST'])
+def remove_relationship(): 
+    """Remove following relationship from database."""
+    msg = flask.request.json
+
+    if not (verify_key(msg['api_key'])):
+        context = {'msg': 'invalid key'}
+        return flask.jsonify(**context), 403
+    
+    userID1 = msg['userID1']
+    userID2 = msg['userID2']
+
+    connection = BNTR_API.model.get_db()
+
+    connection.execute(
+        "DELETE "
+        "FROM Following "
+        "WHERE userID1 = ? AND userID2 = ? ",
+        (userID1, userID2, )
+    )
+
+    context = {
+        "msg": "deletion success"
+    }
+
+    return flask.jsonify(**context), 200
+
 @BNTR_API.app.route('/api/followers/<user_id_slug>/')
 def fetch_followers(user_id_slug):
     """Fetch all followers for User."""

@@ -183,5 +183,10 @@ case $1 in
 
     # Fetch info for user 3, with respect to user 2, logname_follows_username should be true 
     curl -X GET http://localhost:8000/api/users/2/3/?api_key=87ab0a3db51d297d3d1cf2d4dcdcb71b
+
+    # Remove following relationships
+    curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "userID1": 1, "userID2": 3}' http://localhost:8000/api/unfollowing/
+    curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "userID1": 2, "userID2": 3}' http://localhost:8000/api/unfollowing/
+    curl -X POST -H "Content-Type: application/json" -d '{"api_key": "87ab0a3db51d297d3d1cf2d4dcdcb71b", "userID1": 2, "userID2": 1}' http://localhost:8000/api/unfollowing/
     ;;
 esac
