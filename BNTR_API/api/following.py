@@ -58,14 +58,62 @@ def remove_relationship():
 
     return flask.jsonify(**context), 200
 
+
 @BNTR_API.app.route('/api/followers/<user_id_slug>/')
 def fetch_followers(user_id_slug):
     """Fetch all followers for User."""
+    if not (verify_key(flask.request.args.get('api_key'))):
+        context = {'msg': 'invalid key'}
+        return flask.jsonify(**context), 403    
+
+    connection = BNTR_API.model.get_db()
+
+    cur = connection.execute(
+        "SELECT U.userID, U.username, U.banter, U.profile_picture "
+        "FROM Users U, Following F "
+        "WHERE F.userID1 = U.userID AND F.userID2 = ? ",
+        (user_id_slug, )
+    )
+    followers = cur.fetchall()
+
+    context = {"followers": []}
+
+    for follower in followers: 
+        context['followers'].append({"userID": follower['userID'],
+                                     "username": follower['username'],
+                                     "banter": follower['banter'],
+                                     "profile_picture": follower['profile_picture']})
+    
+    return flask.jsonify(**context), 200
 
 
 @BNTR_API.app.route('/api/following/<user_id_slug>/')
 def fetch_following(user_id_slug):
     """Fetch all following for User."""
+    if not (verify_key(flask.request.args.get('api_key'))):
+        context = {'msg': 'invalid key'}
+        return flask.jsonify(**context), 403
+    
+    connection = BNTR_API.model.get_db()
+
+    cur = connection.execute(
+        "SELECT U.userID, U.username, U.banter, U.profile_picture "
+        "FROM Users U, Following F "
+        "WHERE F.userID2 = U.userID AND F.userID1 = ? ",
+        (user_id_slug, )
+    )
+    following = cur.fetchall()
+
+    context = {"following": []}
+
+    for follow in following:
+        context['following'].append({
+            "userID": follow['userID'],
+            "username": follow['username'],
+            "banter": follow['banter'],
+            "profile_picture": follow['profile_picture']
+        })
+    return flask.jsonify(**context), 200
 
 
 def get_num_followers_following(connection, userIdSlug):
