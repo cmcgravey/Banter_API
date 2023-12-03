@@ -59,6 +59,8 @@ CREATE TABLE Questions(
     worth3 INTEGER NOT NULL,
     decrease3 INTEGER NOT NULL,
     answer VARCHAR(50) NOT NULL,
+    type VARCHAR(50) NOT NULL,
+    tag VARCHAR(50) NOT NULL,
     FOREIGN KEY(gameID) REFERENCES Games(gameID)
 );
 

@@ -19,6 +19,8 @@ def insert_question(game_id_slug):
     locked = "False"
     label = msg['label']
     text = msg['question']
+    type = msg['type']
+    tag = msg['tag']
 
     opt1, worth1, decrease1 = msg['opt1']
     opt2, worth2, decrease2 = msg['opt2']
@@ -32,9 +34,9 @@ def insert_question(game_id_slug):
     answer = 'PENDING'
 
     connection.execute(
-        "INSERT INTO questions(gameID, locked, text, label, question_stage, opt1, worth1, decrease1, opt2, worth2, decrease2, opt3, worth3, decrease3, answer) "
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
-        (game_id_slug, locked, text, label, question_stage, opt1, worth1, decrease1, opt2, worth2, decrease2, opt3, worth3, decrease3, answer, )
+        "INSERT INTO questions(gameID, locked, text, label, question_stage, opt1, worth1, decrease1, opt2, worth2, decrease2, opt3, worth3, decrease3, answer, type, tag) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
+        (game_id_slug, locked, text, label, question_stage, opt1, worth1, decrease1, opt2, worth2, decrease2, opt3, worth3, decrease3, answer, type, tag, )
     )
 
     cur = connection.execute(
@@ -128,7 +130,9 @@ def fetch_questions_for_game(game_id_slug):
             "options": [ques['opt1'], ques['opt2'], ques['opt3']],
             "increases": [ques['worth1'], ques['worth2'], ques['worth3']],
             "decreases": [ques['decrease1'], ques['decrease2'], ques['decrease3']],
-            "answer": ques['answer']
+            "answer": ques['answer'],
+            "type": ques['type'],
+            "tag": ques['tag']
         }
         context['questions'].append(dict_entry)
     
@@ -209,7 +213,9 @@ def fetch_questions_by_user(game_id_slug, user_id_slug):
             "decreases": [ques['decrease1'], ques['decrease2'], ques['decrease3']],
             "answer": ques['answer'],
             "user_answer": user_answer,
-            "answered": answered
+            "answered": answered, 
+            "type": ques['type'],
+            "tag": ques['tag']
         }
         context["questions"].append(dict_entry)
     

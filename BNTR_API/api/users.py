@@ -191,3 +191,32 @@ def fetch_leaderboards():
         context['leaders'].append({"name": user['username'], "banter": user['banter'], "profile_picture": user['profile_picture'], "userID": user['userID']})
 
     return flask.jsonify(**context), 200
+
+
+@BNTR_API.app.route('/api/users/leaderboards/following/<user_id_slug>/')
+def fetch_following_leaderboards(user_id_slug):
+    """Fetch leaderboards of all users loguser is following."""
+    if not (verify_key(flask.request.args.get('api_key'))):
+        context = {'msg': 'invalid key'}
+        return flask.jsonify(**context), 403
+    
+    connection = BNTR_API.model.get_db()
+
+    cur = connection.execute(
+        "SELECT U.userID, U.banter, U.username, U.profile_picture "
+        "FROM Following F, Users U "
+        "WHERE ? = F.userID1 OR U.userID = ? "
+        "ORDER BY U.banter DESC, username DESC ",
+        (user_id_slug, user_id_slug, )
+    )
+    following = cur.fetchall()
+
+    context = {"leaders": []}
+
+    for idx, user in enumerate(following):
+        if idx == 8:
+            break
+
+        context['leaders'].append({"name": user['username'], "banter": user['banter'], "profile_picture": user['profile_picture'], "userID": user['userID']})
+
+    return flask.jsonify(**context), 200
