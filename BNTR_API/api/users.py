@@ -203,9 +203,9 @@ def fetch_following_leaderboards(user_id_slug):
     connection = BNTR_API.model.get_db()
 
     cur = connection.execute(
-        "SELECT U.userID, U.banter, U.username, U.profile_picture "
+        "SELECT DISTINCT U.userID, U.banter, U.username, U.profile_picture "
         "FROM Following F, Users U "
-        "WHERE ? = F.userID1 OR U.userID = ? "
+        "WHERE F.userID1 = ? OR U.userID = ? "
         "ORDER BY U.banter DESC, username DESC ",
         (user_id_slug, user_id_slug, )
     )
