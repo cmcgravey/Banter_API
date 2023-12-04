@@ -203,10 +203,15 @@ def fetch_following_leaderboards(user_id_slug):
     connection = BNTR_API.model.get_db()
 
     cur = connection.execute(
-        "SELECT DISTINCT U.userID, U.banter, U.username, U.profile_picture "
-        "FROM Following F, Users U "
-        "WHERE F.userID1 = ? OR U.userID = ? "
-        "ORDER BY U.banter DESC, username DESC ",
+        "SELECT U.username, U.banter, U.userID, U.profile_picture "
+        "FROM Users U "
+        "JOIN Following F ON U.userID = F.userID2 "
+        "WHERE F.userID1 = ? "
+        "UNION ALL "
+        "SELECT U2.username, U2.banter, U2.userID, U2.profile_picture "
+        "FROM Users U2 "
+        "WHERE U2.userID = ? "
+        "ORDER BY banter DESC ",
         (user_id_slug, user_id_slug, )
     )
     following = cur.fetchall()
